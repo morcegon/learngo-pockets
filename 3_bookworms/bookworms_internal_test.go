@@ -51,7 +51,7 @@ func TestLoadBookworms(t *testing.T) {
 }
 
 func TestBookCount(t *testing.T) {
-	testCases := map[string]struct {
+	tt := map[string]struct {
 		input []Bookworm
 		want  map[Book]uint
 	}{
@@ -91,11 +91,50 @@ func TestBookCount(t *testing.T) {
 		},
 	}
 
-	for name, tc := range testCases {
+	for name, tc := range tt {
 		t.Run(name, func(t *testing.T) {
 			got := booksCount(tc.input)
 			if !equalBooksCount(t, got, tc.want) {
 				t.Fatalf("got a different list of books: %v, expected %v", got, tc.want)
+			}
+		})
+	}
+}
+
+func TestFindCommonBooks(t *testing.T) {
+	tt := map[string]struct {
+		input []Bookworm
+		want  []Book
+	}{
+		"no common book": {
+			input: []Bookworm{
+				{Name: "Fadi", Books: []Book{handmaidsTale, theBellJar}},
+				{Name: "Peggy", Books: []Book{oryxAndCrake, janeEyre}},
+			},
+			want: nil,
+		},
+		"one common book": {
+			input: []Bookworm{
+				{Name: "Fadi", Books: []Book{handmaidsTale, theBellJar}},
+				{Name: "Peggy", Books: []Book{oryxAndCrake, janeEyre, handmaidsTale}},
+			},
+			want: []Book{handmaidsTale},
+		},
+		"three bookworms have the same books on their shelves": {
+			input: []Bookworm{
+				{Name: "Fadi", Books: []Book{handmaidsTale, theBellJar}},
+				{Name: "Peggy", Books: []Book{oryxAndCrake, janeEyre, handmaidsTale}},
+				{Name: "Renan", Books: []Book{handmaidsTale}},
+			},
+			want: []Book{handmaidsTale},
+		},
+	}
+
+	for name, tc := range tt {
+		t.Run(name, func(t *testing.T) {
+			got := findCommonBooks(tc.input)
+			if !equalBooks(t, tc.want, got) {
+				t.Fatalf("got a different list of books: %v, expected: %v", got, tc.want)
 			}
 		})
 	}
