@@ -133,8 +133,8 @@ func TestFindCommonBooks(t *testing.T) {
 		},
 		"three bookworms have the same books on their shelves": {
 			input: []Bookworm{
-				{Name: "Fadi", Books: []Book{handmaidsTale, theBellJar, janeEyre}},
-				{Name: "Peggy", Books: []Book{handmaidsTale, theBellJar, janeEyre}},
+				{Name: "Fadi", Books: []Book{janeEyre, handmaidsTale, theBellJar}},
+				{Name: "Peggy", Books: []Book{theBellJar, handmaidsTale, janeEyre}},
 				{Name: "Renan", Books: []Book{handmaidsTale, theBellJar, janeEyre}},
 			},
 			want: []Book{janeEyre, handmaidsTale, theBellJar},
