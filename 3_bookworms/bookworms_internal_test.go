@@ -1,6 +1,9 @@
 package main
 
-import "testing"
+import (
+	"os"
+	"testing"
+)
 
 var (
 	handmaidsTale = Book{Author: "Margaret Atwood", Title: "The Handmaid's Tale"}
@@ -8,6 +11,14 @@ var (
 	theBellJar    = Book{Author: "Sylvia Plath", Title: "The Bell Jar"}
 	janeEyre      = Book{Author: "Charlotte Brontë", Title: "Jane Eyre"}
 )
+
+func Example_main() {
+	os.Args = []string{"cmd", "--filePath=testdata/bookworms.json"}
+	main()
+	// Output:
+	// Here are the books in common:
+	// - The Handmaid's Tale by Margaret Atwood
+}
 
 func TestLoadBookworms(t *testing.T) {
 	type testCase struct {
@@ -116,17 +127,17 @@ func TestFindCommonBooks(t *testing.T) {
 		"one common book": {
 			input: []Bookworm{
 				{Name: "Fadi", Books: []Book{handmaidsTale, theBellJar, janeEyre}},
-				{Name: "Peggy", Books: []Book{oryxAndCrake, janeEyre, handmaidsTale}},
+				{Name: "Peggy", Books: []Book{oryxAndCrake, handmaidsTale}},
 			},
-			want: []Book{janeEyre, handmaidsTale},
+			want: []Book{handmaidsTale},
 		},
 		"three bookworms have the same books on their shelves": {
 			input: []Bookworm{
-				{Name: "Fadi", Books: []Book{handmaidsTale, theBellJar}},
-				{Name: "Peggy", Books: []Book{oryxAndCrake, janeEyre, handmaidsTale}},
-				{Name: "Renan", Books: []Book{handmaidsTale}},
+				{Name: "Fadi", Books: []Book{handmaidsTale, theBellJar, janeEyre}},
+				{Name: "Peggy", Books: []Book{handmaidsTale, theBellJar, janeEyre}},
+				{Name: "Renan", Books: []Book{handmaidsTale, theBellJar, janeEyre}},
 			},
-			want: []Book{handmaidsTale},
+			want: []Book{janeEyre, handmaidsTale, theBellJar},
 		},
 	}
 
