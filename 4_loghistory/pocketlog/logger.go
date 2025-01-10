@@ -33,7 +33,7 @@ func (l *Logger) Debugf(format string, args ...any) {
 
 // Infof formats and prins a message if the log level is info or higher
 func (l *Logger) Infof(format string, args ...any) {
-	if l.threshold > LevenInfo {
+	if l.threshold > LevelInfo {
 		return
 	}
 
@@ -55,5 +55,11 @@ func (l *Logger) logf(format string, args ...any) {
 		l.output = os.Stdout
 	}
 
+	format = l.addLogLevel(format)
+
 	_, _ = fmt.Fprintf(l.output, format+"\n", args...)
+}
+
+func (l *Logger) addLogLevel(format string) string {
+	return "[" + logLevelName[l.threshold] + "] " + format
 }

@@ -28,15 +28,15 @@ func TestLogger_DebugInfoErrorf(t *testing.T) {
 	tt := map[string]testCase{
 		"debug": {
 			level:    pocketlog.LevelDebug,
-			expected: debugMessage + "\n" + infoMessage + "\n" + errorMessage + "\n",
+			expected: "[Debug] " + debugMessage + "\n" + "[Debug] " + infoMessage + "\n" + "[Debug] " + errorMessage + "\n",
 		},
 		"info": {
-			level:    pocketlog.LevenInfo,
-			expected: infoMessage + "\n" + errorMessage + "\n",
+			level:    pocketlog.LevelInfo,
+			expected: "[Info] " + infoMessage + "\n" + "[Info] " + errorMessage + "\n",
 		},
 		"error": {
 			level:    pocketlog.LevelError,
-			expected: errorMessage + "\n",
+			expected: "[Error] " + errorMessage + "\n",
 		},
 	}
 
