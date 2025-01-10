@@ -1,0 +1,12 @@
+package pocketlog
+
+import "io"
+
+type Option func(l *Logger)
+
+// Returns a configuration function that sets the ouput of a log
+func WithOutput(output io.Writer) Option {
+	return func(lgr *Logger) {
+		lgr.output = output
+	}
+}
