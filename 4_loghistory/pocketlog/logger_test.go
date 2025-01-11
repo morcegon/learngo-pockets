@@ -16,7 +16,7 @@ const (
 func ExampleLogger_debugf() {
 	debugLogger := pocketlog.New(pocketlog.LevelDebug, pocketlog.WithOutput(os.Stdout))
 	debugLogger.Debugf("Hello, %s", "world")
-	// Output: Hello, world
+	// Output: [Debug] Hello, world
 }
 
 func TestLogger_DebugInfoErrorf(t *testing.T) {
@@ -52,6 +52,42 @@ func TestLogger_DebugInfoErrorf(t *testing.T) {
 
 			if tw.contents != tc.expected {
 				t.Errorf("invalid contents, expected %q, got %q", tc.expected, tw.contents)
+			}
+		})
+	}
+}
+
+func TestLogger_LimitMessage(t *testing.T) {
+	tt := map[string]struct {
+		limit    uint16
+		input    string
+		expected string
+	}{
+		"limit": {
+			limit:    2,
+			input:    "Hello world",
+			expected: "[Debug] He\n",
+		},
+		"default limit": {
+			input:    "Hello world",
+			expected: "[Debug] Hello world\n",
+		},
+	}
+
+	for name, tc := range tt {
+		t.Run(name, func(t *testing.T) {
+			tw := &testWriter{}
+
+			logger := pocketlog.New(
+				pocketlog.LevelDebug,
+				pocketlog.WithOutput(tw),
+				pocketlog.LimitMessages(tc.limit),
+			)
+
+			logger.Debugf(tc.input)
+
+			if tw.contents != tc.expected {
+				t.Fatalf("invalid content, expected %q, got %q", tc.expected, tw.contents)
 			}
 		})
 	}
