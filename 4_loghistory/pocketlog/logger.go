@@ -28,7 +28,7 @@ func (l *Logger) Debugf(format string, args ...any) {
 		return
 	}
 
-	l.logf(format, args...)
+	l.Logf(format, args...)
 }
 
 // Infof formats and prins a message if the log level is info or higher
@@ -37,7 +37,7 @@ func (l *Logger) Infof(format string, args ...any) {
 		return
 	}
 
-	l.logf(format, args...)
+	l.Logf(format, args...)
 }
 
 // Errorf formats and prins a message if the log level is error or higher
@@ -46,11 +46,11 @@ func (l *Logger) Errorf(format string, args ...any) {
 		return
 	}
 
-	l.logf(format, args...)
+	l.Logf(format, args...)
 }
 
-// logf prints the message to the output
-func (l *Logger) logf(format string, args ...any) {
+// Logf prints the message to the output
+func (l *Logger) Logf(format string, args ...any) {
 	if l.output == nil {
 		l.output = os.Stdout
 	}
