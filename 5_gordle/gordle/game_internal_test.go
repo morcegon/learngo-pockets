@@ -80,3 +80,46 @@ func TestValidateGuess(t *testing.T) {
 		})
 	}
 }
+
+func TestComputeFeedback(t *testing.T) {
+	tt := map[string]struct {
+		guess            string
+		solution         string
+		expectedFeedback feedback
+	}{
+		"nominal": {
+			guess:            "ASDFG",
+			solution:         "ASDFG",
+			expectedFeedback: feedback{2, 2, 2, 2, 2},
+		},
+		"double character": {
+			guess:            "HELLO",
+			solution:         "HELLO",
+			expectedFeedback: feedback{2, 2, 2, 2, 2},
+		},
+		"double with wrong answer": {
+			guess:            "HELOO",
+			solution:         "HELLO",
+			expectedFeedback: feedback{2, 2, 2, 0, 2},
+		},
+		"two identical, but not in the right position": {
+			guess:            "HELOL",
+			solution:         "HELLO",
+			expectedFeedback: feedback{2, 2, 2, 1, 1},
+		},
+	}
+
+	for name, tc := range tt {
+		t.Run(name, func(t *testing.T) {
+			fb := computeFeedback([]rune(tc.guess), []rune(tc.solution))
+			if !tc.expectedFeedback.Equal(fb) {
+				t.Errorf(
+					"guess: %q, got the wrong feedback, expxected %v, got %v",
+					tc.guess,
+					tc.expectedFeedback,
+					fb,
+				)
+			}
+		})
+	}
+}

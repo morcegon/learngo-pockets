@@ -33,6 +33,10 @@ func (g *Game) Play() {
 	for currentAttempt := 1; currentAttempt <= g.maxAttempts; currentAttempt++ {
 		guess := g.ask()
 
+		fb := computeFeedback(guess, g.solution)
+
+		fmt.Println(fb.String())
+
 		if slices.Equal(guess, g.solution) {
 			fmt.Printf(
 				"🎉 You won! You found it in %d guess(es)! The word was: %s.\n",
@@ -94,4 +98,51 @@ func (g *Game) validateGuess(guess []rune) error {
 
 func splitToUppercaseCharacters(input string) []rune {
 	return []rune(strings.ToUpper(input))
+}
+
+func computeFeedback(guess, solution []rune) feedback {
+	result := make(feedback, len(guess))
+	used := make([]bool, len(solution))
+
+	if len(guess) != len(solution) {
+		_, _ = fmt.Fprintf(
+			os.Stderr,
+			"Internal error! Guess and solution have different lengths: %d vs %d",
+			len(guess),
+			len(solution),
+		)
+		return result
+	}
+
+	// check the correct letters
+	for posIngGuess, character := range guess {
+		if character == solution[posIngGuess] {
+			result[posIngGuess] = correctPostion
+			used[posIngGuess] = true
+		}
+	}
+
+	// look for letters in wrong correctPostiion
+	for posIngGuess, character := range guess {
+		if result[posIngGuess] != absentCharacter {
+			continue
+		}
+
+		for posInSolution, target := range solution {
+			if used[posInSolution] {
+				// The letter of the solution is already assigned to a letter of the guess
+				// Skip to the next letter of the solution
+				continue
+			}
+
+			if character == target {
+				result[posIngGuess] = wrongPosition
+				used[posInSolution] = true
+				// Skip to the next letter of the guess
+				break
+			}
+		}
+	}
+
+	return result
 }

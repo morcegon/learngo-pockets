@@ -10,7 +10,7 @@ type (
 const (
 	absentCharacter hint = iota
 	wrongPosition
-	correctPostiion
+	correctPostion
 )
 
 func (h hint) String() string {
@@ -19,7 +19,7 @@ func (h hint) String() string {
 		return "⬜️" // grey square
 	case wrongPosition:
 		return "🟡"
-	case correctPostiion:
+	case correctPostion:
 		return "💚"
 	default:
 		// this should never happen
@@ -34,4 +34,18 @@ func (fb feedback) String() string {
 		sb.WriteString(h.String())
 	}
 	return sb.String()
+}
+
+func (fb feedback) Equal(other feedback) bool {
+	if len(fb) != len(other) {
+		return false
+	}
+
+	for index, value := range fb {
+		if value != other[index] {
+			return false
+		}
+	}
+
+	return true
 }
